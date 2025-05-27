@@ -1,0 +1,123 @@
+// Importa o React e o useState para controle de estado
+import React, { useState } from 'react';
+// Importa ícones do pacote AntDesign
+import AntDesign from '@expo/vector-icons/AntDesign';
+// Importa componentes do React Native para construir a interface
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, TextInput } from 'react-native';
+
+// Componente principal do aplicativo
+export default function App() {
+  // Estado para controlar a cor do ícone de coração
+  const [heartColor, setHeartColor] = useState('red');
+  // Estado para uma mensagem (não está sendo usado no momento)
+  const [mensagem, setMensagem] = useState('');
+  // Estado para armazenar o texto digitado pelo usuário
+  const [inputText, setInputText] = useState('');
+  // Estado para controlar a visibilidade do balão flutuante
+  const [showBalloon, setShowBalloon] = useState(false);
+
+  // Função que alterna a cor do coração entre vermelho e cinza
+  const toggleHeartColor = () => {
+    setHeartColor(heartColor === 'red' ? 'gray' : 'red');
+  };
+
+  // Função executada ao clicar no botão
+  const voceClicou = () => {
+    setShowBalloon(true); // Mostra o balão
+    setTimeout(() => {
+      setShowBalloon(false); // Esconde o balão depois de 3 segundos
+    }, 3000);
+  };
+
+  // Interface do aplicativo
+  return (
+    <View style={styles.container}> {/* Container principal da tela */}
+
+      <Text>VAI CORINTHIANS</Text> {/* Texto fixo */}
+
+      <Image
+        source={{ uri: 'https://i.pinimg.com/736x/bc/27/6f/bc276ff73e30a5f50c493aeb685edb90.jpg' }} // URL da imagem
+        style={styles.image} // Aplica estilo à imagem
+      />
+
+      <TouchableOpacity onPress={toggleHeartColor}> {/* Botão invisível clicável */}
+        <AntDesign name="heart" size={24} color={heartColor} /> {/* Ícone de coração com cor controlada */}
+      </TouchableOpacity>
+
+      {/* Campo de texto para o usuário digitar algo */}
+      <TextInput
+        style={styles.input} // Estilo do input
+        placeholder="Digite algo legal..." // Texto de dica (placeholder)
+        value={inputText} // Valor atual do input
+        onChangeText={setInputText} // Atualiza o estado ao digitar
+      />
+
+      {/* Botão que chama a função voceClicou */}
+      <Button
+        title="Clique aqui Ninja"
+        onPress={voceClicou}
+      />
+
+      {/* Se houver mensagem (não usada aqui), ela aparece */}
+      {mensagem !== '' && (
+        <Text style={styles.mensagemTexto}>{mensagem}</Text>
+      )}
+
+      {/* Se showBalloon for verdadeiro, mostra o balão com o texto digitado */}
+      {showBalloon && (
+        <View style={styles.balloon}>
+          <Text style={styles.balloonText}>{inputText}</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+// Estilos para os componentes
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Ocupa a tela toda
+    backgroundColor: '#fff', // Cor de fundo branca
+    alignItems: 'center', // Alinha horizontalmente ao centro
+    justifyContent: 'center', // Alinha verticalmente ao centro
+  },
+  image: {
+    width: 100, // Largura da imagem
+    height: 100, // Altura da imagem
+    marginBottom: 10, // Espaço abaixo da imagem
+  },
+  ButtonText: {
+    color: 'white', // Cor do texto do botão (não está sendo usado aqui)
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mensagemTexto: {
+    marginTop: 20, // Espaço acima
+    fontSize: 16, // Tamanho do texto
+    fontWeight: 'bold', // Texto em negrito
+    color: 'blue', // Cor azul
+  },
+  input: {
+    height: 40, // Altura do campo
+    width: '80%', // Largura em 80% da tela
+    borderColor: '#aaa', // Cor da borda
+    borderWidth: 1, // Largura da borda
+    borderRadius: 8, // Arredondamento dos cantos
+    paddingHorizontal: 10, // Espaço interno horizontal
+    marginVertical: 15, // Espaço acima e abaixo
+  },
+  balloon: {
+    position: 'absolute', // Posicionamento absoluto na tela
+    bottom: 150, // Distância do fundo da tela
+    backgroundColor: '#333', // Cor de fundo escura
+    padding: 10, // Espaço interno
+    borderRadius: 10, // Cantos arredondados
+    maxWidth: '80%', // Largura máxima
+    alignItems: 'center', // Centraliza texto no eixo horizontal
+    justifyContent: 'center', // Centraliza texto no eixo vertical
+  },
+  balloonText: {
+    color: '#fff', // Cor branca para o texto do balão
+    fontSize: 16, // Tamanho do texto
+  },
+});
