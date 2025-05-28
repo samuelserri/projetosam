@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Button,
+  TextInput,
+} from 'react-native';
 
 export default function App() {
   const [heartColor, setHeartColor] = useState('red');
-  const [mensagem, setMensagem] = useState('');
   const [inputText, setInputText] = useState('');
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [password, setPassword] = useState('');
+  const [accessGranted, setAccessGranted] = useState(false);
   const [showBalloon, setShowBalloon] = useState(false);
 
   const toggleHeartColor = () => {
@@ -13,11 +23,23 @@ export default function App() {
   };
 
   const voceClicou = () => {
-    // setMensagem('Você clicou');
-    setShowBalloon(true);
-    setTimeout(() => {
+    if (inputText.trim() !== '') {
+      setShowPasswordInput(true);
+    }
+  };
+
+  const verificarSenha = () => {
+    if (password === '1234') {
+      setAccessGranted(true);
       setShowBalloon(false);
-    }, 3000); // Oculta o balão após 3 segundos
+
+      // Mostra o balão "Entrou" por 1 segundo
+      setTimeout(() => {
+        setAccessGranted(false);
+      }, 1000);
+    } else {
+      alert('Senha incorreta');
+    }
   };
 
   return (
@@ -25,7 +47,9 @@ export default function App() {
       <Text>VAI CORINTHIANS</Text>
 
       <Image
-        source={{ uri: 'https://i.pinimg.com/736x/bc/27/6f/bc276ff73e30a5f50c493aeb685edb90.jpg' }}
+        source={{
+          uri: 'https://i.pinimg.com/736x/bc/27/6f/bc276ff73e30a5f50c493aeb685edb90.jpg',
+        }}
         style={styles.image}
       />
 
@@ -33,24 +57,36 @@ export default function App() {
         <AntDesign name="heart" size={24} color={heartColor} />
       </TouchableOpacity>
 
-      {/* 🔹 Input para digitar algo */}
       <TextInput
         style={styles.input}
         placeholder="Digite algo legal..."
+        placeholderTextColor="#888"
         value={inputText}
         onChangeText={setInputText}
       />
 
-      <Button
-        title="Clique aqui Ninja"
-        onPress={voceClicou}
-      />
+      <Button title="Clique aqui Ninja" onPress={voceClicou} />
 
-      {mensagem !== '' && (
-        <Text style={styles.mensagemTexto}>{mensagem}</Text>
+      {showPasswordInput && !accessGranted && (
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="Digite a senha"
+            placeholderTextColor="#888"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <Button title="Verificar Senha" onPress={verificarSenha} />
+        </>
       )}
 
-      {/* 🔹 Balão flutuante */}
+      {accessGranted && (
+        <View style={styles.balloon}>
+          <Text style={styles.balloonText}>Entrou</Text>
+        </View>
+      )}
+
       {showBalloon && (
         <View style={styles.balloon}>
           <Text style={styles.balloonText}>{inputText}</Text>
@@ -60,6 +96,7 @@ export default function App() {
   );
 }
 
+// Estilos ajustados
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,25 +109,15 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 10,
   },
-  ButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  mensagemTexto: {
-    marginTop: 20,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'blue',
-  },
   input: {
-    height: 40,
-    width: '80%',
+    height: 30,          // Mais baixo
+    width: '15%',        // Mais estreito
     borderColor: '#aaa',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 6,
     paddingHorizontal: 10,
-    marginVertical: 15,
+    marginVertical: 8,
+    fontSize: 13,         // Fonte menor (afeta placeholder também)
   },
   balloon: {
     position: 'absolute',
