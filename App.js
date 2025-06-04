@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import {
   StyleSheet,
@@ -12,39 +12,27 @@ import {
 
 export default function App() {
   const [heartColor, setHeartColor] = useState('red');
-  const [inputText, setInputText] = useState('');
-  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [accessGranted, setAccessGranted] = useState(false);
-  const [showBalloon, setShowBalloon] = useState(false);
+  const [message, setMessage] = useState('');
 
   const toggleHeartColor = () => {
     setHeartColor(heartColor === 'red' ? 'gray' : 'red');
   };
 
-  const voceClicou = () => {
-    if (inputText.trim() !== '') {
-      setShowPasswordInput(true);
-    }
-  };
-
-  const verificarSenha = () => {
-    if (password === '1234') {
-      setAccessGranted(true);
-      setShowBalloon(false);
-
-      // Mostra o balão "Entrou" por 1 segundo
-      setTimeout(() => {
-        setAccessGranted(false);
-      }, 1000);
+  const handleLogin = () => {
+    if (username.trim().toLowerCase() === 'samuel' && password === '1462') {
+      setMessage('Entrou');
     } else {
-      alert('Senha incorreta');
+      setMessage('Tá errado!');
     }
+
+    setTimeout(() => setMessage(''), 2000);
   };
 
   return (
     <View style={styles.container}>
-      <Text>VAI CORINTHIANS</Text>
+      <Text style={styles.title}>VAI CORINTHIANS</Text>
 
       <Image
         source={{
@@ -53,84 +41,82 @@ export default function App() {
         style={styles.image}
       />
 
-      <TouchableOpacity onPress={toggleHeartColor}>
-        <AntDesign name="heart" size={24} color={heartColor} />
+      <TouchableOpacity onPress={toggleHeartColor} style={{ marginBottom: 15 }}>
+        <AntDesign name="heart" size={30} color={heartColor} />
       </TouchableOpacity>
 
       <TextInput
         style={styles.input}
-        placeholder="Digite algo legal..."
+        placeholder="Usuário"
         placeholderTextColor="#888"
-        value={inputText}
-        onChangeText={setInputText}
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
       />
 
-      <Button title="Clique aqui Ninja" onPress={voceClicou} />
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        placeholderTextColor="#888"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
 
-      {showPasswordInput && !accessGranted && (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite a senha"
-            placeholderTextColor="#888"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-          <Button title="Verificar Senha" onPress={verificarSenha} />
-        </>
-      )}
+      <View style={{ width: '10%', marginTop: 10 }}>
+        <Button title="Entrar" onPress={handleLogin} />
+      </View>
 
-      {accessGranted && (
+      {message !== '' && (
         <View style={styles.balloon}>
-          <Text style={styles.balloonText}>Entrou</Text>
-        </View>
-      )}
-
-      {showBalloon && (
-        <View style={styles.balloon}>
-          <Text style={styles.balloonText}>{inputText}</Text>
+          <Text style={styles.balloonText}>{message}</Text>
         </View>
       )}
     </View>
   );
 }
 
-// Estilos ajustados
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 15,
+    fontWeight: 'bold',
   },
   image: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+    borderRadius: 8,
   },
   input: {
-    height: 30,          // Mais baixo
-    width: '15%',        // Mais estreito
+    height: 40,
+    width: 250,
     borderColor: '#aaa',
     borderWidth: 1,
     borderRadius: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     marginVertical: 8,
-    fontSize: 13,         // Fonte menor (afeta placeholder também)
+    fontSize: 16,
   },
   balloon: {
-    position: 'absolute',
-    bottom: 150,
+    marginTop: 20,
     backgroundColor: '#333',
-    padding: 10,
+    padding: 12,
     borderRadius: 10,
-    maxWidth: '80%',
     alignItems: 'center',
     justifyContent: 'center',
+    minWidth: 120,
   },
   balloonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
   },
 });
+
