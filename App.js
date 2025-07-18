@@ -7,9 +7,11 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-// Importa o componente do Jogo da Forca do novo arquivo
-// Certifique-se que o nome do arquivo está correto: HangmanGameScreen.js
+// Importações das telas (confirme que esses arquivos existem e estão com os nomes corretos)
 import HangmanGameScreen from './HangmanGameScreen';
+import GameMenuScreen from './GameMenuScreen';
+import TicTacToeScreen from './newwindow';        // seu jogo da velha
+import FootballQuizScreen from './FootballQuizScreen'; // novo quiz de futebol
 
 const Stack = createStackNavigator();
 
@@ -21,14 +23,12 @@ function MainScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
-  // Alterna a cor do coração
   const toggleHeartColor = () => {
     setHeartColor(heartColor === 'red' ? 'gray' : 'red');
   };
 
-  // Mostra o alerta de login
   const showAlert = () => {
-    if (login === 'admin' && password === 'admin') {
+    if (login === 'samuel' && password === '1462') {
       setModalMessage('Login e senha corretos!');
     } else {
       setModalMessage('Login ou senha incorretos.');
@@ -89,19 +89,16 @@ function MainScreen({ navigation }) {
                 onPress={() => {
                   setModalVisible(false);
                   if (login === 'samuel' && password === '1462') {
-                    // Navega para a tela do jogo da forca
-                    navigation.navigate('HangmanGame');
-                    // Limpa os campos de login e senha após o sucesso
+                    navigation.navigate('GameMenu'); // Navega para o menu de jogos
                     setLogin('');
                     setPassword('');
                   } else {
-                    // Limpa os campos de senha em caso de erro
                     setPassword('');
                   }
                 }}
               >
                 <Text style={styles.modalButtonText}>
-                  {login === 'samuel' && password === '1462' ? 'Ir para o Jogo' : 'Fechar'}
+                  {login === 'samuel' && password === '1462' ? 'Ir para o Menu' : 'Fechar'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -112,20 +109,22 @@ function MainScreen({ navigation }) {
   );
 }
 
-// ---------- NAVEGAÇÃO PRINCIPAL ----------
+// ---------- APP PRINCIPAL COM NAVEGAÇÃO ----------
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="Main" component={MainScreen} options={{ title: 'Login' }} />
-        {/* Usando o componente importado para a tela do jogo */}
+        <Stack.Screen name="GameMenu" component={GameMenuScreen} options={{ title: 'Menu de Jogos' }} />
         <Stack.Screen name="HangmanGame" component={HangmanGameScreen} options={{ title: 'Jogo da Forca' }} />
+        <Stack.Screen name="TicTacToe" component={TicTacToeScreen} options={{ title: 'Jogo da Velha' }} />
+        <Stack.Screen name="FootballQuiz" component={FootballQuizScreen} options={{ title: 'Quiz de Futebol' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-// ---------- ESTILOS DA TELA DE LOGIN ----------
+// ---------- ESTILOS ----------
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   innerContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
   },
   modalText: { fontSize: 18, marginBottom: 25, textAlign: 'center', fontWeight: 'bold', color: '#333' },
   modalButton: {
-    backgroundColor: '#28A745', // Verde para o botão de ação
+    backgroundColor: '#28A745',
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 10,
